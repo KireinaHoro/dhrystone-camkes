@@ -1,0 +1,6 @@
+import "../../interfaces/TimerInterface.idl4";
+
+component Client {
+    control;
+    uses TimerInterface timer;
+}

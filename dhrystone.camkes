@@ -1,0 +1,38 @@
+/* apps/helloworld/helloworld.camkes */
+
+import <std_connector.camkes>;
+import "components/Client/Client.camkes";
+import "components/Timer/Timer.camkes";
+
+assembly {
+    composition {
+        component Client client;
+        component Timer timer;
+        component Timerbase tm_base;
+
+        connection seL4HardwareMMIO clock_reg(from timer.clock_reg, to tm_base.clock_reg);
+        connection seL4HardwareInterrupt clock_irq(from tm_base.clock_irq, to timer.clock_irq);
+
+        connection seL4HardwareMMIO timeout_reg(from timer.timeout_reg, to tm_base.timeout_reg);
+        connection seL4HardwareInterrupt timeout_irq(from tm_base.timeout_irq, to timer.timeout_irq);
+
+        connection seL4RPCCall timer_rpc(from client.timer, to timer.timer);
+    }
+
+    configuration {
+        // Comparator 0 of PWM0
+        tm_base.clock_reg_paddr = 0x10020000;
+        tm_base.clock_reg_size = 0x1000;
+        tm_base.clock_irq_irq_number = 4;
+
+        // Comparator 0 of PWM1
+        tm_base.timeout_reg_paddr = 0x10021000;
+        tm_base.timeout_reg_size = 0x1000;
+        tm_base.timeout_irq_irq_number = 8;
+        
+        // Input frequency is the same as CPU frequency
+        timer.input_freq = 100000000; // 100MHz
+
+        timer.sem_value = 0;
+    }
+}

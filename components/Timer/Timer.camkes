@@ -1,0 +1,24 @@
+import "../../interfaces/TimerInterface.idl4";
+
+component Timer {
+    dataport Buf clock_reg;
+    consumes Interrupt clock_irq;
+
+    dataport Buf timeout_reg;
+    consumes Interrupt timeout_irq;
+
+    provides TimerInterface timer;
+    attribute int input_freq;
+
+    has semaphore sem;
+}
+
+component Timerbase {
+    hardware;
+
+    dataport Buf clock_reg;
+    emits Interrupt clock_irq;
+
+    dataport Buf timeout_reg;
+    emits Interrupt timeout_irq;
+}
