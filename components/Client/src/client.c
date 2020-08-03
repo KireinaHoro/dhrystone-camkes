@@ -27,15 +27,21 @@ void delay() {
     timer_sleep(2 * NS_IN_SECOND);
 }
 
-int run(void) {
-    printf("----- Dhrystone on Rocket Chip -----\n\n");
-
+void test_timer() {
     printf("Testing timer...\n");
     report_time();
     for (int i = 0; i < 10; ++i) {
         delay();
         report_time();
     }
+}
+
+void run_dhrystone();
+
+int run(void) {
+    printf("----- Dhrystone on Rocket Chip -----\n\n");
+
+    run_dhrystone();
 
     printf("----- Client done -----\n");
 
